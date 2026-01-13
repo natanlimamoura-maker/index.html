@@ -1,0 +1,44 @@
+window.confirmarSaidaFinal = async () => {
+    const id = document.getElementById('saida-id-temp').value;
+    const v = patio.find(v => v.id == id);
+    const btn = document.querySelector('#modal-saida button:last-child');
+    
+    // Pegando os dados de texto
+    const dadosParaEnviar = {
+        cliente: v.cliente,
+        placa: v.placa,
+        modelo: v.modelo,
+        entrada: v.entrada,
+        saida: document.getElementById('input-data-saida').value,
+        servico_final: document.getElementById('input-servico-final').value.toUpperCase(),
+        status_final: "CONCLUÍDO"
+    };
+
+    const URL_N8N = "https://n8n-projeto-n8n.bi9xft.easypanel.host/webhook/APKFUMA";
+
+    try {
+        btn.innerText = "ENVIANDO...";
+        btn.disabled = true;
+
+        // Envia para o n8n
+        await fetch(URL_N8N, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosParaEnviar)
+        });
+
+        // Salva no histórico local
+        historico.unshift(dadosParaEnviar);
+        localStorage.setItem('patio_historico', JSON.stringify(historico));
+        patio = patio.filter(v => v.id != id);
+        localStorage.setItem('patio_data', JSON.stringify(patio));
+        
+        alert("Dados enviados ao n8n!");
+        location.reload();
+
+    } catch (error) {
+        alert("Erro ao conectar com o n8n. O registro foi salvo apenas no celular.");
+        console.error(error);
+        location.reload();
+    }
+};
