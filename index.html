@@ -12,7 +12,7 @@
         .nav-button.active { color: #2563eb; background: #eff6ff; border-radius: 15px; }
         #bloqueio, #modal-saida, #pagina-detalhes { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
         #pagina-detalhes { background: #f3f4f6; flex-direction: column; justify-content: flex-start; overflow-y: auto; padding: 0; }
-        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 30px; padding: 25px; animation: slideUp 0.3s ease-out; }
+        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 30px; padding: 25px; animation: slideUp 0.3s depth-out; }
         @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
@@ -20,26 +20,23 @@
 
     <div id="bloqueio">
         <div class="modal-content text-center">
-            <h2 class="text-xl font-bold mb-4 uppercase text-blue-700">Ativação Requerida</h2>
+            <h2 class="text-xl font-bold mb-4 uppercase text-blue-700">Ativação</h2>
             <input type="password" id="senha-licenca" placeholder="Senha 0907" class="border-2 p-4 rounded-xl w-full mb-4 text-center outline-none">
-            <button onclick="verificarSenha()" class="bg-blue-600 text-white w-full py-4 rounded-xl font-bold uppercase shadow-lg">Entrar no Sistema</button>
+            <button onclick="verificarSenha()" class="bg-blue-600 text-white w-full py-4 rounded-xl font-bold uppercase">Acessar</button>
         </div>
     </div>
 
     <div id="modal-saida">
         <div class="modal-content">
-            <h3 class="font-black text-blue-700 uppercase italic mb-4">Finalizar Registro</h3>
+            <h3 class="font-black text-blue-700 uppercase italic mb-4">Finalizar Teste IA</h3>
             <input type="hidden" id="saida-id-temp">
-            
-            <label class="text-[10px] font-bold text-gray-400 uppercase ml-2">Data de Saída</label>
-            <input type="text" id="input-data-saida" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl mb-4 text-center font-bold outline-none">
-            
-            <label class="text-[10px] font-bold text-gray-400 uppercase ml-2">Serviço Realizado</label>
-            <input type="text" id="input-servico-final" placeholder="Ex: Troca de Freios" class="w-full bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl mb-6 font-bold uppercase outline-none">
-            
+            <label class="text-[10px] font-bold text-gray-400 uppercase">Data de Saída</label>
+            <input type="text" id="input-data-saida" class="w-full bg-gray-50 border-2 p-4 rounded-2xl mb-4 text-center font-bold outline-none">
+            <label class="text-[10px] font-bold text-gray-400 uppercase">Serviço Realizado</label>
+            <input type="text" id="input-servico-final" placeholder="Ex: Revisão Geral" class="w-full bg-gray-50 border-2 p-4 rounded-2xl mb-6 font-bold uppercase outline-none">
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="fecharModalSaida()" class="bg-gray-100 text-gray-500 font-bold p-4 rounded-2xl uppercase text-[10px]">Cancelar</button>
-                <button id="btn-confirmar-saida" onclick="confirmarSaidaFinal()" class="bg-green-600 text-white font-black p-4 rounded-2xl shadow-lg uppercase text-[10px]">Concluir e Enviar</button>
+                <button id="btn-confirmar-saida" onclick="confirmarSaidaFinal()" class="bg-orange-500 text-white font-black p-4 rounded-2xl shadow-lg uppercase text-[10px]">Enviar Teste</button>
             </div>
         </div>
     </div>
@@ -47,19 +44,14 @@
     <div id="pagina-detalhes">
         <header class="bg-blue-700 text-white p-5 w-full flex items-center gap-4">
             <button onclick="fecharDetalhes()" class="text-xl">←</button>
-            <h1 class="text-lg font-black uppercase italic">Histórico Detalhado</h1>
+            <h1 class="text-lg font-black uppercase">Dados Registrados</h1>
         </header>
         <div class="p-5 w-full max-w-xl space-y-4">
-            <div class="w-full h-64 bg-gray-200 rounded-3xl overflow-hidden border-4 border-white shadow-md">
-                <img id="detalhe-foto" class="w-full h-full object-cover">
-            </div>
-            <div class="bg-white p-6 rounded-3xl shadow-sm space-y-3">
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-gray-400 uppercase">Placa</label><p id="detalhe-placa" class="font-black text-xl"></p></div>
-                    <div><label class="text-[10px] font-bold text-gray-400 uppercase">Cliente</label><p id="detalhe-cliente" class="font-bold"></p></div>
-                </div>
-                <div><label class="text-[10px] font-bold text-gray-400 uppercase">WhatsApp</label><p id="detalhe-telefone" class="font-bold text-blue-600"></p></div>
-                <div><label class="text-[10px] font-bold text-gray-400 uppercase">Modelo</label><p id="detalhe-modelo" class="font-bold uppercase"></p></div>
+            <img id="detalhe-foto" class="w-full h-64 rounded-3xl object-cover border-4 border-white shadow-md">
+            <div class="bg-white p-6 rounded-3xl shadow-sm space-y-2">
+                <p id="detalhe-placa" class="font-black text-2xl mb-2"></p>
+                <p id="detalhe-cliente" class="font-bold text-lg"></p>
+                <p id="detalhe-telefone" class="font-bold text-blue-600"></p>
             </div>
         </div>
     </div>
@@ -67,7 +59,7 @@
     <header class="bg-blue-700 text-white p-5 shadow-lg sticky top-0 z-50 rounded-b-2xl">
         <div class="flex justify-between items-center">
             <h1 class="text-xl font-black italic uppercase">PÁTIO PRO ELITE</h1>
-            <span id="contador" class="bg-blue-900 px-3 py-1 rounded-full text-[10px] font-bold uppercase">0 NO PÁTIO</span>
+            <span id="contador" class="bg-blue-900 px-3 py-1 rounded-full text-[10px] font-bold uppercase">0 VEÍCULOS</span>
         </div>
     </header>
 
@@ -75,16 +67,16 @@
         <section id="aba-entrada" class="tab-content active">
             <div class="bg-white p-6 rounded-3xl shadow-md border">
                 <form id="form-entrada" class="space-y-4">
-                    <input type="text" id="input-data-entrada" required class="w-full bg-gray-50 border-2 p-3 rounded-2xl text-center font-bold outline-none">
-                    <input type="text" id="placa" placeholder="PLACA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-black text-xl text-center uppercase outline-none">
-                    <input type="text" id="modelo" placeholder="MODELO / MARCA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase outline-none">
-                    <input type="text" id="cliente" placeholder="NOME DO CLIENTE" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase outline-none">
-                    <input type="tel" id="telefone" placeholder="WHATSAPP (DDD + NÚMERO)" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold outline-none">
+                    <input type="text" id="input-data-entrada" required class="w-full bg-gray-50 border-2 p-3 rounded-2xl text-center font-bold">
+                    <input type="text" id="placa" placeholder="PLACA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-black text-xl text-center uppercase">
+                    <input type="text" id="modelo" placeholder="MODELO / MARCA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase">
+                    <input type="text" id="cliente" placeholder="NOME DO CLIENTE" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase">
+                    <input type="tel" id="telefone" placeholder="WHATSAPP (DDD + NÚMERO)" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold">
                     
-                    <div id="container-previa" class="hidden w-full h-40 rounded-2xl overflow-hidden border-2">
+                    <div id="container-previa" class="hidden w-full h-40 rounded-2xl overflow-hidden border-2 mb-4">
                         <img id="img-previa" class="w-full h-full object-cover">
                     </div>
-
+                    
                     <div class="grid grid-cols-2 gap-3">
                         <label class="flex flex-col items-center justify-center border-2 border-blue-200 p-4 rounded-2xl text-blue-600 cursor-pointer bg-blue-50">
                             <span class="font-bold text-[10px] uppercase">📸 Foto</span>
@@ -178,53 +170,37 @@
 
         window.fecharModalSaida = () => document.getElementById('modal-saida').style.display = 'none';
 
-        // --- FUNÇÃO DE ENVIO PARA A URL FORNECIDA ---
+        // --- FUNÇÃO DE ENVIO PARA O WEBHOOK DE TESTE ---
         window.confirmarSaidaFinal = async () => {
             const id = document.getElementById('saida-id-temp').value;
             const v = patio.find(item => item.id == id);
             const servico = document.getElementById('input-servico-final').value.toUpperCase();
             const btn = document.getElementById('btn-confirmar-saida');
 
-            // Formatação para Discord (caso seja um Webhook real) ou n8n
-            const payload = {
-                content: `🚀 **Nova Saída: ${v.placa}**`,
-                embeds: [{
-                    title: "Resumo do Serviço",
-                    fields: [
-                        { name: "Cliente", value: v.cliente, inline: true },
-                        { name: "Modelo", value: v.modelo, inline: true },
-                        { name: "Serviço", value: servico },
-                        { name: "WhatsApp", value: v.telefone }
-                    ]
-                }],
-                // Campos extras para o n8n processar
-                cliente: v.cliente,
-                placa: v.placa,
-                servico: servico,
-                telefone: v.telefone
-            };
+            const payload = { ...v, saida: document.getElementById('input-data-saida').value, servico_final: servico };
 
-            const URL_DESTINO = "https://discord.com/channels/@me/1329949910451359826/1460778261322924105";
+            // URL DE TESTE ATUALIZADA
+            const URL_N8N = "https://n8n-projeto-n8n.bi9xft.easypanel.host/webhook-test/APKFUMA";
 
             try {
-                btn.innerText = "ENVIANDO...";
+                btn.innerText = "TESTANDO...";
                 btn.disabled = true;
 
-                await fetch(URL_DESTINO, {
+                await fetch(URL_N8N, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                historico.unshift({ ...v, saida: document.getElementById('input-data-saida').value, servico_final: servico });
+                historico.unshift(payload);
                 localStorage.setItem('patio_historico', JSON.stringify(historico));
                 patio = patio.filter(item => item.id != id);
                 localStorage.setItem('patio_data', JSON.stringify(patio));
                 
-                alert("Concluído e Enviado!");
+                alert("Teste enviado! Verifique o n8n.");
                 location.reload();
             } catch (error) {
-                alert("Erro de conexão com a URL. Verifique se o link está ativo.");
+                alert("Erro ao enviar teste. Verifique se o n8n está no modo 'Listen'.");
                 location.reload();
             }
         };
@@ -232,14 +208,14 @@
         function renderizar() {
             const listaPatio = document.getElementById('lista-veiculos');
             listaPatio.innerHTML = '';
-            document.getElementById('contador').innerText = patio.length + " VEÍCULOS";
+            document.getElementById('contador').innerText = patio.length + " VEÍCULOS NO PÁTIO";
             patio.forEach(v => {
                 listaPatio.innerHTML += `
                     <div class="bg-white p-4 rounded-3xl shadow-sm border flex gap-4 items-center">
-                        <img src="${v.foto || ''}" class="w-16 h-16 rounded-2xl object-cover bg-gray-50 flex-shrink-0">
-                        <div class="flex-1 overflow-hidden">
+                        <img src="${v.foto || ''}" class="w-16 h-16 rounded-2xl object-cover bg-gray-50">
+                        <div class="flex-1">
                             <div class="font-black text-lg">${v.placa}</div>
-                            <div class="text-[10px] text-blue-600 font-bold uppercase truncate">${v.modelo}</div>
+                            <div class="text-[10px] text-blue-600 font-bold uppercase">${v.modelo}</div>
                             <button onclick="abrirModalSaida(${v.id})" class="mt-2 w-full text-[8px] font-black bg-green-600 text-white p-2 rounded-lg uppercase">Dar Saída</button>
                         </div>
                     </div>`;
@@ -249,7 +225,7 @@
             listaRelatorio.innerHTML = '';
             historico.forEach(v => {
                 listaRelatorio.innerHTML += `
-                    <div onclick="abrirDetalhes(${v.id})" class="bg-white p-4 rounded-3xl border flex gap-4 items-center">
+                    <div onclick="abrirDetalhes(${v.id})" class="bg-white p-4 rounded-3xl border flex gap-4 items-center shadow-sm">
                         <img src="${v.foto || ''}" class="w-14 h-14 rounded-xl object-cover">
                         <div class="flex-1">
                             <div class="font-black text-sm uppercase">${v.placa}</div>
@@ -265,7 +241,6 @@
             document.getElementById('detalhe-placa').innerText = v.placa;
             document.getElementById('detalhe-cliente').innerText = v.cliente;
             document.getElementById('detalhe-telefone').innerText = v.telefone;
-            document.getElementById('detalhe-modelo').innerText = v.modelo;
             document.getElementById('pagina-detalhes').style.display = 'flex';
         };
 
