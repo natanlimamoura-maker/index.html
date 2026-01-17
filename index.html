@@ -10,34 +10,25 @@
         body { -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .nav-button.active { color: var(--main-color); background: #eff6ff; border-radius: 15px; }
-        #bloqueio, #modal-saida, #modal-os { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+        .nav-button.active { color: var(--main-color); background: #eff6ff; border-radius: 12px; }
+        #bloqueio, #modal-os { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 30px; padding: 25px; max-height: 90vh; overflow-y: auto; }
-        .os-print { font-family: 'Courier New', Courier, monospace; border: 2px solid #000; padding: 20px; color: black; }
+        .os-print { font-family: 'Courier New', Courier, monospace; border: 2px solid #000; padding: 20px; color: black; line-height: 1.2; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen pb-28 text-gray-800 font-sans">
+<body class="bg-gray-100 min-h-screen pb-32 text-gray-800 font-sans">
 
     <div id="modal-os" onclick="this.style.display='none'">
         <div class="modal-content os-print" onclick="event.stopPropagation()">
             <div id="conteudo-os"></div>
-            <button onclick="window.print()" class="mt-4 w-full bg-black text-white py-3 rounded-xl font-bold uppercase">Imprimir / PDF</button>
-            <button onclick="document.getElementById('modal-os').style.display='none'" class="mt-2 w-full text-gray-400 text-xs font-bold uppercase">Fechar</button>
+            <button onclick="window.print()" class="mt-4 w-full bg-black text-white py-3 rounded-xl font-bold uppercase no-print">Imprimir / PDF</button>
         </div>
     </div>
 
-    <div id="bloqueio">
-        <div class="modal-content text-center">
-            <h2 class="text-xl font-bold mb-4 uppercase text-blue-700">Ativação</h2>
-            <input type="password" id="senha-licenca" placeholder="Senha 0907" class="border-2 p-4 rounded-xl w-full mb-4 text-center outline-none">
-            <button onclick="verificarSenha()" class="bg-blue-600 text-white w-full py-4 rounded-xl font-bold uppercase">Acessar</button>
-        </div>
-    </div>
-
-    <header class="bg-blue-700 text-white p-5 shadow-lg sticky top-0 z-50 rounded-b-2xl">
+    <header id="header-main" class="bg-blue-700 text-white p-5 shadow-lg sticky top-0 z-50 rounded-b-2xl" style="background-color: var(--main-color);">
         <div class="flex justify-between items-center">
             <h1 class="text-xl font-black italic uppercase">PÁTIO PRO ELITE</h1>
-            <span id="contador" class="bg-blue-900 px-3 py-1 rounded-full text-[10px] font-bold uppercase">0 VEÍCULOS</span>
+            <span id="contador" class="bg-black/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase">0 VEÍCULOS</span>
         </div>
     </header>
 
@@ -46,22 +37,22 @@
         <section id="aba-entrada" class="tab-content active">
             <div class="bg-white p-6 rounded-3xl shadow-md border">
                 <form id="form-entrada" class="space-y-4">
-                    <input type="text" id="input-data-entrada" required class="w-full bg-gray-50 border-2 p-3 rounded-2xl text-center font-bold">
                     <input type="text" id="placa" placeholder="PLACA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-black text-xl text-center uppercase">
-                    <input type="text" id="modelo" placeholder="MODELO / MARCA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase">
-                    <input type="text" id="cliente" placeholder="NOME DO CLIENTE" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase">
-                    <input type="tel" id="telefone" placeholder="WHATSAPP" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold">
-                    
-                    <div id="container-previa" class="hidden w-full h-40 rounded-2xl overflow-hidden border-2 mb-4">
-                        <img id="img-previa" class="w-full h-full object-cover">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="modelo" placeholder="MODELO / MARCA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase">
+                        <input type="text" id="cor-veiculo" placeholder="COR DO VEÍCULO" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase">
                     </div>
-
+                    <input type="text" id="cliente" placeholder="NOME DO CLIENTE" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold uppercase text-center">
+                    <input type="tel" id="telefone" placeholder="WHATSAPP" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-bold text-center">
+                    
+                    <div id="container-previa" class="hidden w-full h-40 rounded-2xl overflow-hidden border-2 mb-4"><img id="img-previa" class="w-full h-full object-cover"></div>
+                    
                     <div class="grid grid-cols-2 gap-3">
-                        <label class="flex flex-col items-center justify-center border-2 border-blue-200 p-4 rounded-2xl text-blue-600 bg-blue-50 cursor-pointer">
+                        <label class="flex flex-col items-center justify-center border-2 border-gray-200 p-4 rounded-2xl text-gray-600 bg-gray-50 cursor-pointer">
                             <span class="font-bold text-[10px] uppercase">📸 Foto Entrada</span>
                             <input type="file" accept="image/*" capture="environment" class="hidden" onchange="processarFoto(this, 'entrada')">
                         </label>
-                        <button type="submit" class="bg-blue-600 text-white font-black p-5 rounded-2xl shadow-lg uppercase">Registrar</button>
+                        <button type="submit" class="bg-blue-600 text-white font-black p-5 rounded-2xl shadow-lg uppercase" style="background-color: var(--main-color);">Registrar</button>
                     </div>
                 </form>
             </div>
@@ -72,30 +63,73 @@
         </section>
 
         <section id="aba-estoque" class="tab-content">
-            <div id="lista-estoque" class="space-y-3"></div>
+            <div class="bg-white p-6 rounded-3xl shadow-md border mb-4">
+                <h3 class="font-black text-blue-700 uppercase mb-4 text-xs">Adicionar ao Estoque</h3>
+                <form onsubmit="adicionarEstoque(event)" class="space-y-3">
+                    <input type="text" id="prod-nome" placeholder="NOME DO PRODUTO" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="prod-qtd" placeholder="QTD" required class="bg-gray-50 border-2 p-3 rounded-xl font-bold">
+                        <input type="number" step="0.01" id="prod-valor" placeholder="VALOR UNIT. R$" required class="bg-gray-50 border-2 p-3 rounded-xl font-bold">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-black py-3 rounded-xl uppercase" style="background-color: var(--main-color);">Salvar Item</button>
+                </form>
+            </div>
+            <div id="lista-estoque" class="space-y-2"></div>
         </section>
+
         <section id="aba-orcamento" class="tab-content">
+            <div class="bg-white p-6 rounded-3xl shadow-md border mb-4">
+                <h3 class="font-black text-green-700 uppercase mb-4 text-xs">Novo Orçamento</h3>
+                <form onsubmit="adicionarOrcamento(event)" class="space-y-3">
+                    <input type="text" id="orc-cliente" placeholder="CLIENTE / VEÍCULO" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase">
+                    <textarea id="orc-descricao" placeholder="LISTA DE PEÇAS E SERVIÇOS" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase h-24"></textarea>
+                    <input type="number" step="0.01" id="orc-total" placeholder="VALOR TOTAL R$" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold">
+                    <button type="submit" class="w-full bg-green-600 text-white font-black py-3 rounded-xl uppercase shadow-lg">Registrar Orçamento</button>
+                </form>
+            </div>
             <div id="lista-orcamento" class="space-y-3"></div>
         </section>
+
         <section id="aba-relatorio" class="tab-content">
             <div id="lista-relatorio" class="space-y-3"></div>
         </section>
+
+        <section id="aba-config" class="tab-content">
+            <div class="bg-white p-6 rounded-3xl shadow-md border">
+                <h3 class="font-black text-xs uppercase text-gray-400 mb-4">Temas do Sistema</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="aplicarTema('#2563eb')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-blue-600"></div><span class="text-[9px] font-bold uppercase">Azul</span></button>
+                    <button onclick="aplicarTema('#059669')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-emerald-600"></div><span class="text-[9px] font-bold uppercase">Verde</span></button>
+                    <button onclick="aplicarTema('#7c3aed')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-violet-600"></div><span class="text-[9px] font-bold uppercase">Roxo</span></button>
+                    <button onclick="aplicarTema('#000000')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-black"></div><span class="text-[9px] font-bold uppercase">Dark</span></button>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around items-center h-24 z-50 px-2 shadow-2xl">
-        <button onclick="mudarAba('entrada')" id="btn-nav-entrada" class="nav-button active flex flex-col items-center p-2"><span class="text-xl">➕</span><span class="text-[7px] font-bold mt-1 uppercase">Entrada</span></button>
-        <button onclick="mudarAba('patio')" id="btn-nav-patio" class="nav-button flex flex-col items-center p-2"><span class="text-xl">🚗</span><span class="text-[7px] font-bold mt-1 uppercase">Pátio</span></button>
-        <button onclick="mudarAba('estoque')" id="btn-nav-estoque" class="nav-button flex flex-col items-center p-2"><span class="text-xl">📦</span><span class="text-[7px] font-bold mt-1 uppercase">Estoque</span></button>
-        <button onclick="mudarAba('orcamento')" id="btn-nav-orcamento" class="nav-button flex flex-col items-center p-2"><span class="text-xl">💰</span><span class="text-[7px] font-bold mt-1 uppercase">Orçam.</span></button>
-        <button onclick="mudarAba('relatorio')" id="btn-nav-relatorio" class="nav-button flex flex-col items-center p-2"><span class="text-xl">📋</span><span class="text-[7px] font-bold mt-1 uppercase">Relat.</span></button>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around items-center h-24 z-50 px-1 shadow-2xl">
+        <button onclick="mudarAba('entrada')" id="btn-nav-entrada" class="nav-button active flex flex-col items-center flex-1"><span class="text-xl">➕</span><span class="text-[7px] font-bold mt-1 uppercase">Entrada</span></button>
+        <button onclick="mudarAba('patio')" id="btn-nav-patio" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">🚗</span><span class="text-[7px] font-bold mt-1 uppercase">Pátio</span></button>
+        <button onclick="mudarAba('estoque')" id="btn-nav-estoque" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">📦</span><span class="text-[7px] font-bold mt-1 uppercase">Estoque</span></button>
+        <button onclick="mudarAba('orcamento')" id="btn-nav-orcamento" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">💰</span><span class="text-[7px] font-bold mt-1 uppercase">Orçam.</span></button>
+        <button onclick="mudarAba('relatorio')" id="btn-nav-relatorio" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">📋</span><span class="text-[7px] font-bold mt-1 uppercase">Hist.</span></button>
+        <button onclick="mudarAba('config')" id="btn-nav-config" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">⚙️</span><span class="text-[7px] font-bold mt-1 uppercase">Ajustes</span></button>
     </nav>
 
     <script>
         let patio = JSON.parse(localStorage.getItem('patio_data')) || [];
         let historico = JSON.parse(localStorage.getItem('patio_historico')) || [];
+        let estoque = JSON.parse(localStorage.getItem('patio_estoque')) || [];
+        let orcamentos = JSON.parse(localStorage.getItem('patio_orcamentos')) || [];
         let tempFotoEntrada = null;
 
-        document.getElementById('input-data-entrada').value = new Date().toLocaleDateString('pt-BR');
+        function aplicarTema(cor) {
+            document.documentElement.style.setProperty('--main-color', cor);
+            document.getElementById('header-main').style.backgroundColor = cor;
+            localStorage.setItem('app_tema', cor);
+        }
+        const corSalva = localStorage.getItem('app_tema');
+        if(corSalva) aplicarTema(corSalva);
 
         function mudarAba(aba) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -117,15 +151,14 @@
                         canvas.width = 400;
                         canvas.height = img.height * (400 / img.width);
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        const base64 = canvas.toDataURL('image/jpeg', 0.6);
-                        
-                        if (tipo === 'entrada') {
-                            tempFotoEntrada = base64;
-                            document.getElementById('img-previa').src = base64;
+                        const b64 = canvas.toDataURL('image/jpeg', 0.6);
+                        if(tipo === 'entrada') {
+                            tempFotoEntrada = b64;
+                            document.getElementById('img-previa').src = b64;
                             document.getElementById('container-previa').classList.remove('hidden');
                         } else {
-                            const veiculo = patio.find(v => v.id === id);
-                            veiculo.fotoDepois = base64;
+                            const v = patio.find(v => v.id === id);
+                            v.fotoDepois = b64;
                             localStorage.setItem('patio_data', JSON.stringify(patio));
                             renderizar();
                         }
@@ -137,97 +170,119 @@
 
         document.getElementById('form-entrada').addEventListener('submit', (e) => {
             e.preventDefault();
-            const novo = {
+            patio.unshift({
                 id: Date.now(),
                 placa: document.getElementById('placa').value.toUpperCase(),
                 modelo: document.getElementById('modelo').value.toUpperCase(),
+                cor: document.getElementById('cor-veiculo').value.toUpperCase(),
                 cliente: document.getElementById('cliente').value.toUpperCase(),
                 telefone: document.getElementById('telefone').value,
                 fotoAntes: tempFotoEntrada,
                 fotoDepois: null,
-                entrada: document.getElementById('input-data-entrada').value,
-                servicos: ""
-            };
-            patio.unshift(novo);
+                entrada: new Date().toLocaleDateString('pt-BR'),
+                servicos: "",
+                valorFinal: 0
+            });
             localStorage.setItem('patio_data', JSON.stringify(patio));
-            tempFotoEntrada = null;
             location.reload();
         });
 
+        function renderizar() {
+            // PÁTIO
+            const listaPatio = document.getElementById('lista-veiculos');
+            listaPatio.innerHTML = '';
+            document.getElementById('contador').innerText = patio.length + " VEÍCULOS";
+            patio.forEach(v => {
+                listaPatio.innerHTML += `
+                    <div class="bg-white p-5 rounded-3xl shadow-lg border-2 border-blue-50 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="font-black text-2xl text-blue-700 block">${v.placa}</span>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase">${v.modelo} | ${v.cor}</span>
+                            </div>
+                            <span class="text-[9px] font-bold bg-gray-100 p-1 rounded">${v.entrada}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="${v.fotoAntes}" class="w-full h-24 object-cover rounded-xl bg-gray-50 border">
+                            <label class="h-24 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center cursor-pointer overflow-hidden">
+                                ${v.fotoDepois ? `<img src="${v.fotoDepois}" class="w-full h-full object-cover">` : '<span class="text-blue-500 text-[10px] font-bold">+ FOTO SAÍDA</span>'}
+                                <input type="file" accept="image/*" capture="environment" class="hidden" onchange="processarFoto(this, 'depois', ${v.id})">
+                            </label>
+                        </div>
+                        <textarea onchange="salvarEdicao(${v.id}, 'servicos', this.value)" class="w-full bg-gray-50 p-3 rounded-xl text-xs font-bold" placeholder="DESCREVA OS SERVIÇOS E PEÇAS...">${v.servicos}</textarea>
+                        <input type="number" step="0.01" onchange="salvarEdicao(${v.id}, 'valorFinal', this.value)" value="${v.valorFinal}" class="w-full bg-yellow-50 p-3 rounded-xl text-center font-black text-green-700" placeholder="VALOR TOTAL R$">
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="gerarOS(${v.id})" class="bg-black text-white py-3 rounded-xl font-bold text-[10px] uppercase">GERAR O.S</button>
+                            <button onclick="darSaida(${v.id})" class="bg-green-600 text-white py-3 rounded-xl font-bold text-[10px] uppercase">DAR SAÍDA</button>
+                        </div>
+                    </div>`;
+            });
+
+            // ESTOQUE
+            const listaEstoque = document.getElementById('lista-estoque');
+            listaEstoque.innerHTML = '';
+            estoque.forEach(i => {
+                listaEstoque.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl flex justify-between items-center border shadow-sm">
+                        <div>
+                            <div class="font-black text-sm uppercase">${i.nome}</div>
+                            <div class="text-[10px] font-bold text-gray-500">QTD: ${i.qtd} | UN: R$ ${i.valor}</div>
+                        </div>
+                        <div class="font-black text-blue-600 text-xs">R$ ${(i.qtd * i.valor).toFixed(2)}</div>
+                    </div>`;
+            });
+
+            // ORÇAMENTOS
+            const listaOrc = document.getElementById('lista-orcamento');
+            listaOrc.innerHTML = '';
+            orcamentos.forEach(o => {
+                listaOrc.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl border shadow-sm border-l-4 border-l-green-500">
+                        <div class="font-black text-blue-700 uppercase text-sm">${o.cliente}</div>
+                        <div class="text-[10px] text-gray-500 my-1">${o.desc}</div>
+                        <div class="font-black text-green-600 text-right">TOTAL R$ ${parseFloat(o.total).toFixed(2)}</div>
+                    </div>`;
+            });
+
+            // RELATÓRIO
+            const listaRel = document.getElementById('lista-relatorio');
+            listaRel.innerHTML = '';
+            historico.forEach(v => {
+                listaRel.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl border flex gap-4 items-center">
+                        <img src="${v.fotoAntes}" class="w-12 h-12 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <div class="font-black text-xs uppercase">${v.placa} - ${v.modelo}</div>
+                            <div class="text-[9px] font-bold text-green-600 uppercase">FINALIZADO POR R$ ${v.valorFinal}</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
         function salvarEdicao(id, campo, valor) {
-            const index = patio.findIndex(v => v.id === id);
-            patio[index][campo] = valor.toUpperCase();
+            const v = patio.find(v => v.id === id);
+            v[campo] = valor;
             localStorage.setItem('patio_data', JSON.stringify(patio));
         }
 
         function gerarOS(id) {
             const v = patio.find(v => v.id === id);
-            const conteudo = `
+            document.getElementById('conteudo-os').innerHTML = `
                 <center><strong>PÁTIO PRO ELITE - O.S</strong></center>
-                <hr>
-                <p>DATA: ${v.entrada}</p>
-                <p>CLIENTE: ${v.cliente}</p>
-                <p>VEÍCULO: ${v.modelo} (${v.placa})</p>
-                <p>WHATSAPP: ${v.telefone}</p>
-                <hr>
+                <hr style="border: 1px dashed #000; margin: 10px 0">
+                <p><strong>VEÍCULO:</strong> ${v.modelo}</p>
+                <p><strong>PLACA:</strong> ${v.placa} | <strong>COR:</strong> ${v.cor}</p>
+                <p><strong>CLIENTE:</strong> ${v.cliente}</p>
+                <p><strong>ENTRADA:</strong> ${v.entrada}</p>
+                <hr style="border: 1px dashed #000; margin: 10px 0">
                 <p><strong>SERVIÇOS REALIZADOS:</strong></p>
-                <p>${v.servicos || 'Nenhum serviço registrado'}</p>
+                <p style="font-size: 10px">${v.servicos || 'A CONSULTAR'}</p>
+                <hr style="border: 1px dashed #000; margin: 10px 0">
+                <p align="right" style="font-size: 16px"><strong>TOTAL R$ ${parseFloat(v.valorFinal).toFixed(2)}</strong></p>
                 <br><br>
-                <p align="center">_________________________<br>Assinatura Cliente</p>
+                <p align="center">______________________<br>Assinatura Responsável</p>
             `;
-            document.getElementById('conteudo-os').innerHTML = conteudo;
             document.getElementById('modal-os').style.display = 'flex';
-        }
-
-        function renderizar() {
-            const listaPatio = document.getElementById('lista-veiculos');
-            listaPatio.innerHTML = '';
-            document.getElementById('contador').innerText = patio.length + " VEÍCULOS";
-
-            patio.forEach(v => {
-                listaPatio.innerHTML += `
-                    <div class="bg-white p-5 rounded-3xl shadow-lg border-2 border-blue-100 space-y-4">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <input onchange="salvarEdicao(${v.id}, 'placa', this.value)" value="${v.placa}" class="font-black text-xl w-32 outline-none text-blue-700">
-                            <span class="text-[10px] font-bold text-gray-400">ID: ${v.id}</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-2 text-sm">
-                            <div>
-                                <label class="text-[9px] font-bold text-gray-400 uppercase">Modelo</label>
-                                <input onchange="salvarEdicao(${v.id}, 'modelo', this.value)" value="${v.modelo}" class="w-full font-bold outline-none">
-                            </div>
-                            <div>
-                                <label class="text-[9px] font-bold text-gray-400 uppercase">Cliente</label>
-                                <input onchange="salvarEdicao(${v.id}, 'cliente', this.value)" value="${v.cliente}" class="w-full font-bold outline-none">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <span class="text-[9px] font-bold uppercase text-gray-400">📸 ANTES</span>
-                                <img src="${v.fotoAntes || ''}" class="w-full h-24 object-cover rounded-xl bg-gray-100 border">
-                            </div>
-                            <div class="space-y-1">
-                                <span class="text-[9px] font-bold uppercase text-gray-400">📸 DEPOIS</span>
-                                <label class="block w-full h-24 rounded-xl border-2 border-dashed border-blue-200 flex items-center justify-center cursor-pointer overflow-hidden">
-                                    ${v.fotoDepois ? `<img src="${v.fotoDepois}" class="w-full h-full object-cover">` : '<span class="text-blue-500 text-xl">+</span>'}
-                                    <input type="file" accept="image/*" capture="environment" class="hidden" onchange="processarFoto(this, 'depois', ${v.id})">
-                                </label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="text-[9px] font-bold text-gray-400 uppercase">Serviços / Observações</label>
-                            <textarea onchange="salvarEdicao(${v.id}, 'servicos', this.value)" class="w-full bg-yellow-50 p-2 rounded-xl text-xs font-medium border-none outline-none" placeholder="Descreva os serviços...">${v.servicos || ''}</textarea>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="gerarOS(${v.id})" class="bg-black text-white py-3 rounded-xl font-black text-[10px] uppercase shadow-md">Gerar O.S</button>
-                            <button onclick="darSaida(${v.id})" class="bg-green-600 text-white py-3 rounded-xl font-black text-[10px] uppercase shadow-md">Finalizar</button>
-                        </div>
-                    </div>`;
-            });
         }
 
         function darSaida(id) {
@@ -239,14 +294,31 @@
             renderizar();
         }
 
-        function verificarSenha() {
-            if (document.getElementById('senha-licenca').value === "0907") {
-                localStorage.setItem('data_ativacao', Date.now());
-                document.getElementById('bloqueio').style.display = 'none';
-            } else alert("Incorreto");
+        function adicionarEstoque(e) {
+            e.preventDefault();
+            estoque.unshift({
+                id: Date.now(), 
+                nome: document.getElementById('prod-nome').value.toUpperCase(), 
+                qtd: document.getElementById('prod-qtd').value,
+                valor: document.getElementById('prod-valor').value
+            });
+            localStorage.setItem('patio_estoque', JSON.stringify(estoque));
+            e.target.reset(); renderizar();
         }
 
-        mudarAba('entrada');
+        function adicionarOrcamento(e) {
+            e.preventDefault();
+            orcamentos.unshift({
+                id: Date.now(), 
+                cliente: document.getElementById('orc-cliente').value.toUpperCase(), 
+                desc: document.getElementById('orc-descricao').value.toUpperCase(), 
+                total: document.getElementById('orc-total').value
+            });
+            localStorage.setItem('patio_orcamentos', JSON.stringify(orcamentos));
+            e.target.reset(); renderizar();
+        }
+
+        renderizar();
     </script>
 </body>
 </html>
