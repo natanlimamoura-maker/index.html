@@ -15,6 +15,7 @@
         .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 30px; padding: 25px; max-height: 90vh; overflow-y: auto; }
         .os-print { font-family: 'Courier New', Courier, monospace; border: 2px solid #000; padding: 20px; color: black; line-height: 1.2; }
         .atrasado { border: 2px solid #ef4444 !important; animation: pulse 2s infinite; }
+        .estoque-critico { background-color: #fefce8 !important; border-color: #facc15 !important; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
     </style>
 </head>
@@ -39,29 +40,29 @@
         <section id="aba-entrada" class="tab-content active">
             <div class="bg-white p-6 rounded-3xl shadow-md border">
                 <form id="form-entrada" class="space-y-4">
-                    <h3 class="font-black text-[10px] uppercase text-blue-600">Veículo e Cliente</h3>
+                    <h3 class="font-black text-[10px] uppercase text-blue-600">Dados do Veículo e Cliente</h3>
                     <input type="text" id="placa" placeholder="PLACA" required class="w-full bg-gray-50 border-2 p-4 rounded-2xl font-black text-xl text-center uppercase">
                     <div class="grid grid-cols-2 gap-2">
                         <input type="text" id="modelo" placeholder="MODELO" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase">
                         <input type="text" id="cor-veiculo" placeholder="COR" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase">
                     </div>
-                    <input type="text" id="cliente" placeholder="NOME DO CLIENTE" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase">
+                    <input type="text" id="cliente" placeholder="NOME DO CLIENTE" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase text-center">
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="cpf-cliente" placeholder="CPF" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold">
+                        <input type="text" id="cpf-cliente" placeholder="CPF" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold text-center">
                         <input type="date" id="data-prevista" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold">
                     </div>
+                    <input type="text" id="end-cliente" placeholder="ENDEREÇO COMPLETO" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase text-center text-xs">
 
                     <h3 class="font-black text-[10px] uppercase text-green-600 mt-4">Orçamento de Serviços</h3>
                     <div id="lista-servicos-entrada" class="space-y-2">
                         <div class="grid grid-cols-3 gap-2">
-                            <input type="text" placeholder="Serviço" class="col-span-2 bg-gray-50 border p-2 rounded-lg text-xs s-nome">
-                            <input type="number" placeholder="R$" class="bg-gray-50 border p-2 rounded-lg text-xs s-preco" oninput="somarOrcamento()">
+                            <input type="text" placeholder="Serviço" class="col-span-2 bg-gray-50 border p-2 rounded-lg text-xs s-nome uppercase font-bold">
+                            <input type="number" placeholder="R$" class="bg-gray-50 border p-2 rounded-lg text-xs s-preco font-bold" oninput="somarOrcamento()">
                         </div>
                     </div>
                     <button type="button" onclick="maisServico()" class="text-[10px] font-bold text-blue-500 uppercase">+ Adicionar Linha</button>
                     
-                    <div class="bg-green-50 p-4 rounded-2xl text-center">
-                        <span class="text-[10px] font-bold uppercase block text-green-600">Total Previsto</span>
+                    <div class="bg-green-50 p-4 rounded-2xl text-center border border-green-100">
                         <span id="total-estimado" class="text-xl font-black text-green-700">R$ 0,00</span>
                     </div>
 
@@ -83,39 +84,77 @@
         </section>
 
         <section id="aba-estoque" class="tab-content">
-            <div id="lista-estoque" class="space-y-2"></div>
+            <div class="bg-white p-6 rounded-3xl shadow-md border mb-4">
+                <h3 class="font-black text-[10px] uppercase text-blue-600 mb-4">Cadastrar Peça/Item</h3>
+                <form onsubmit="adicionarEstoque(event)" class="space-y-3">
+                    <input type="text" id="prod-nome" placeholder="NOME DO ITEM" required class="w-full bg-gray-50 border-2 p-3 rounded-xl font-bold uppercase">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="prod-qtd" placeholder="QTD INICIAL" required class="bg-gray-50 border-2 p-3 rounded-xl font-bold">
+                        <input type="number" step="0.01" id="prod-valor" placeholder="R$ UNITÁRIO" required class="bg-gray-50 border-2 p-3 rounded-xl font-bold">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-black py-3 rounded-xl uppercase shadow-md" style="background-color: var(--main-color);">Adicionar ao Estoque</button>
+                </form>
+            </div>
+            <div id="lista-estoque" class="space-y-2 pb-10"></div>
         </section>
 
         <section id="aba-relatorio" class="tab-content">
             <div id="lista-relatorio" class="space-y-3"></div>
         </section>
+
+        <section id="aba-config" class="tab-content">
+            <div class="bg-white p-6 rounded-3xl shadow-md border text-center">
+                <h3 class="font-black text-xs uppercase text-gray-400 mb-6">Mudar Cor do App</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="aplicarTema('#2563eb')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-blue-600"></div><span class="text-[9px] font-bold uppercase">Azul</span></button>
+                    <button onclick="aplicarTema('#059669')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-emerald-600"></div><span class="text-[9px] font-bold uppercase">Verde</span></button>
+                    <button onclick="aplicarTema('#7c3aed')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-violet-600"></div><span class="text-[9px] font-bold uppercase">Roxo</span></button>
+                    <button onclick="aplicarTema('#333333')" class="p-4 border-2 rounded-2xl flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full bg-gray-800"></div><span class="text-[9px] font-bold uppercase">Escuro</span></button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around items-center h-24 z-50 shadow-2xl">
-        <button onclick="mudarAba('entrada')" class="nav-button active flex flex-col items-center flex-1"><span class="text-xl">➕</span><span class="text-[7px] font-bold uppercase">Entrada</span></button>
-        <button onclick="mudarAba('patio')" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">🚗</span><span class="text-[7px] font-bold uppercase">Pátio</span></button>
-        <button onclick="mudarAba('estoque')" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">📦</span><span class="text-[7px] font-bold uppercase">Estoque</span></button>
-        <button onclick="mudarAba('relatorio')" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">📋</span><span class="text-[7px] font-bold uppercase">Relat.</span></button>
+        <button onclick="mudarAba('entrada')" id="btn-nav-entrada" class="nav-button active flex flex-col items-center flex-1"><span class="text-xl">➕</span><span class="text-[7px] font-bold mt-1 uppercase">Entrada</span></button>
+        <button onclick="mudarAba('patio')" id="btn-nav-patio" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">🚗</span><span class="text-[7px] font-bold mt-1 uppercase">Pátio</span></button>
+        <button onclick="mudarAba('estoque')" id="btn-nav-estoque" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">📦</span><span class="text-[7px] font-bold mt-1 uppercase">Estoque</span></button>
+        <button onclick="mudarAba('relatorio')" id="btn-nav-relatorio" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">📋</span><span class="text-[7px] font-bold mt-1 uppercase">Histórico</span></button>
+        <button onclick="mudarAba('config')" id="btn-nav-config" class="nav-button flex flex-col items-center flex-1"><span class="text-xl">⚙️</span><span class="text-[7px] font-bold mt-1 uppercase">Ajustes</span></button>
     </nav>
 
     <script>
         let patio = JSON.parse(localStorage.getItem('patio_data')) || [];
         let historico = JSON.parse(localStorage.getItem('patio_historico')) || [];
+        let estoque = JSON.parse(localStorage.getItem('patio_estoque')) || [];
         let tempFotoEntrada = null;
+
+        function aplicarTema(cor) {
+            document.documentElement.style.setProperty('--main-color', cor);
+            document.getElementById('header-main').style.backgroundColor = cor;
+            localStorage.setItem('app_tema', cor);
+        }
+        if(localStorage.getItem('app_tema')) aplicarTema(localStorage.getItem('app_tema'));
+
+        function mudarAba(aba) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+            document.getElementById('aba-' + aba).classList.add('active');
+            document.getElementById('btn-nav-' + aba).classList.add('active');
+            renderizar();
+        }
 
         function maisServico() {
             const div = document.createElement('div');
             div.className = "grid grid-cols-3 gap-2";
-            div.innerHTML = `<input type="text" placeholder="Serviço" class="col-span-2 bg-gray-50 border p-2 rounded-lg text-xs s-nome">
-                             <input type="number" placeholder="R$" class="bg-gray-50 border p-2 rounded-lg text-xs s-preco" oninput="somarOrcamento()">`;
+            div.innerHTML = `<input type="text" placeholder="Serviço" class="col-span-2 bg-gray-50 border p-2 rounded-lg text-xs s-nome uppercase font-bold">
+                             <input type="number" placeholder="R$" class="bg-gray-50 border p-2 rounded-lg text-xs s-preco font-bold" oninput="somarOrcamento()">`;
             document.getElementById('lista-servicos-entrada').appendChild(div);
         }
 
         function somarOrcamento() {
             let total = 0;
-            document.querySelectorAll('.s-preco').forEach(input => {
-                total += parseFloat(input.value) || 0;
-            });
+            document.querySelectorAll('.s-preco').forEach(input => { total += parseFloat(input.value) || 0; });
             document.getElementById('total-estimado').innerText = `R$ ${total.toFixed(2)}`;
             return total;
         }
@@ -124,14 +163,13 @@
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const b64 = e.target.result;
                     if(tipo === 'entrada') {
-                        tempFotoEntrada = b64;
-                        document.getElementById('img-previa').src = b64;
+                        tempFotoEntrada = e.target.result;
+                        document.getElementById('img-previa').src = tempFotoEntrada;
                         document.getElementById('container-previa').classList.remove('hidden');
                     } else {
                         const v = patio.find(v => v.id === id);
-                        v.fotoDepois = b64;
+                        v.fotoDepois = e.target.result;
                         localStorage.setItem('patio_data', JSON.stringify(patio));
                         renderizar();
                     }
@@ -142,11 +180,11 @@
 
         document.getElementById('form-entrada').addEventListener('submit', (e) => {
             e.preventDefault();
-            let servicosArray = [];
+            let servArray = [];
             document.querySelectorAll('#lista-servicos-entrada .grid').forEach(row => {
                 let n = row.querySelector('.s-nome').value;
                 let p = row.querySelector('.s-preco').value;
-                if(n) servicosArray.push({nome: n, preco: p});
+                if(n) servArray.push({nome: n.toUpperCase(), preco: p});
             });
 
             patio.unshift({
@@ -156,11 +194,12 @@
                 cor: document.getElementById('cor-veiculo').value.toUpperCase(),
                 cliente: document.getElementById('cliente').value.toUpperCase(),
                 cpf: document.getElementById('cpf-cliente').value,
+                endereco: document.getElementById('end-cliente').value.toUpperCase(),
                 dataPrevista: document.getElementById('data-prevista').value,
                 fotoAntes: tempFotoEntrada,
                 fotoDepois: null,
                 status: "PENDENTE",
-                servicos: servicosArray,
+                servicos: servArray,
                 total: somarOrcamento()
             });
             localStorage.setItem('patio_data', JSON.stringify(patio));
@@ -177,79 +216,113 @@
                 listaPatio.innerHTML += `
                     <div class="bg-white p-5 rounded-3xl shadow-lg border-2 ${isAtrasado ? 'atrasado' : 'border-blue-50'} space-y-4">
                         <div class="flex justify-between items-start">
-                            <div>
-                                <span class="font-black text-2xl text-blue-700 uppercase">${v.placa}</span>
-                                ${isAtrasado ? '<span class="block text-[8px] font-bold text-red-500 uppercase">⚠️ SERVIÇO ATRASADO</span>' : ''}
-                            </div>
-                            <select onchange="atualizarCampo(${v.id}, 'status', this.value)" class="text-[9px] font-bold p-1 rounded bg-gray-100 outline-none">
+                            <div><span class="font-black text-2xl text-blue-700 uppercase">${v.placa}</span></div>
+                            <select onchange="atualizarStatus(${v.id}, this.value)" class="text-[9px] font-black p-1 rounded bg-gray-100 border outline-none">
                                 <option value="PENDENTE" ${v.status==='PENDENTE'?'selected':''}>PENDENTE</option>
-                                <option value="EM ANDAMENTO" ${v.status==='EM ANDAMENTO'?'selected':''}>EM ANDAMENTO</option>
+                                <option value="ANDAMENTO" ${v.status==='ANDAMENTO'?'selected':''}>ANDAMENTO</option>
                                 <option value="FINALIZADO" ${v.status==='FINALIZADO'?'selected':''}>FINALIZADO</option>
                             </select>
                         </div>
-
-                        <div class="grid grid-cols-2 gap-2">
-                            <img src="${v.fotoAntes}" class="w-full h-24 object-cover rounded-xl bg-gray-100">
-                            <label class="h-24 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center cursor-pointer overflow-hidden">
-                                ${v.fotoDepois ? `<img src="${v.fotoDepois}" class="w-full h-full object-cover">` : '<span class="text-[8px] font-bold">+ FOTO SAÍDA</span>'}
-                                <input type="file" accept="image/*" capture="environment" class="hidden" onchange="processarFoto(this, 'depois', ${v.id})">
-                            </label>
+                        <div class="grid grid-cols-2 gap-2 text-[8px] font-bold text-gray-400 uppercase">
+                            <span>VEÍCULO: ${v.modelo} | ${v.cor}</span><span>CLIENTE: ${v.cliente}</span>
                         </div>
-
-                        <div class="space-y-1">
-                            <span class="text-[9px] font-bold text-gray-400 uppercase">Previsão: ${v.dataPrevista.split('-').reverse().join('/')}</span>
-                            <div class="bg-gray-50 p-3 rounded-xl">
-                                ${v.servicos.map(s => `<div class="flex justify-between text-[10px] font-bold"><span>${s.nome}</span><span>R$ ${parseFloat(s.preco).toFixed(2)}</span></div>`).join('')}
-                                <div class="border-t mt-2 pt-1 flex justify-between font-black text-blue-600 text-xs"><span>TOTAL</span><span>R$ ${v.total.toFixed(2)}</span></div>
-                            </div>
+                        <div class="bg-gray-50 p-3 rounded-xl border">
+                            ${v.servicos.map(s => `<div class="flex justify-between text-[9px] font-bold uppercase"><span>${s.nome}</span><span>R$ ${parseFloat(s.preco).toFixed(2)}</span></div>`).join('')}
+                            <div class="border-t mt-2 pt-1 flex justify-between font-black text-blue-600 text-[11px]"><span>TOTAL</span><span>R$ ${v.total.toFixed(2)}</span></div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="gerarOS(${v.id})" class="bg-black text-white py-3 rounded-xl font-bold text-[10px] uppercase">VER O.S</button>
-                            <button onclick="darSaida(${v.id})" class="bg-green-600 text-white py-3 rounded-xl font-bold text-[10px] uppercase">FINALIZAR</button>
+                            <button onclick="gerarOS(${v.id})" class="bg-black text-white py-3 rounded-xl font-bold text-[10px] uppercase">Gerar O.S</button>
+                            <button onclick="darSaida(${v.id})" class="bg-green-600 text-white py-3 rounded-xl font-bold text-[10px] uppercase shadow-lg">Dar Saída</button>
                         </div>
                     </div>`;
             });
+
+            // RENDER ESTOQUE
+            const listaEstoque = document.getElementById('lista-estoque');
+            listaEstoque.innerHTML = '';
+            estoque.forEach(i => {
+                const isUltimo = i.qtd == 1;
+                const isZerado = i.qtd <= 0;
+                listaEstoque.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl flex flex-col border shadow-sm ${isUltimo ? 'estoque-critico' : ''} ${isZerado ? 'opacity-50' : ''}">
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                <div class="font-black text-sm uppercase">${i.nome}</div>
+                                <div class="text-[9px] font-bold text-gray-500 uppercase">Valor Unit: R$ ${parseFloat(i.valor).toFixed(2)}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-black text-lg ${isZerado ? 'text-red-600' : 'text-blue-600'}">${i.qtd}</div>
+                                <div class="text-[7px] font-bold text-gray-400 uppercase">Quantidade</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t">
+                             ${isUltimo ? '<span class="text-[8px] font-black text-yellow-600 uppercase animate-pulse">⚠️ Último Item</span>' : '<span></span>'}
+                             ${isZerado ? '<span class="text-[8px] font-black text-red-600 uppercase">Sem Estoque</span>' : '<span></span>'}
+                             <div class="flex gap-2">
+                                 <button onclick="retirarEstoque(${i.id})" class="bg-orange-500 text-white text-[8px] px-3 py-2 rounded-lg font-bold uppercase" ${isZerado ? 'disabled' : ''}>Retirar 1</button>
+                                 <button onclick="removerEstoque(${i.id})" class="bg-gray-100 text-red-500 text-[8px] px-3 py-2 rounded-lg font-bold uppercase">Excluir</button>
+                             </div>
+                        </div>
+                    </div>`;
+            });
+
+            const listaRel = document.getElementById('lista-relatorio');
+            listaRel.innerHTML = '';
+            historico.forEach(v => {
+                listaRel.innerHTML += `<div class="bg-white p-4 rounded-xl border flex gap-4 items-center opacity-70"><div class="flex-1"><div class="font-black text-xs uppercase">${v.placa} - ${v.cliente}</div><div class="text-[9px] font-bold text-green-600">PAGO R$ ${v.total.toFixed(2)}</div></div></div>`;
+            });
         }
 
-        function atualizarCampo(id, campo, valor) {
+        // FUNÇÕES DE ESTOQUE
+        function adicionarEstoque(e) {
+            e.preventDefault();
+            estoque.unshift({
+                id: Date.now(),
+                nome: document.getElementById('prod-nome').value.toUpperCase(),
+                qtd: parseInt(document.getElementById('prod-qtd').value),
+                valor: parseFloat(document.getElementById('prod-valor').value)
+            });
+            localStorage.setItem('patio_estoque', JSON.stringify(estoque));
+            e.target.reset(); renderizar();
+        }
+
+        function retirarEstoque(id) {
+            const item = estoque.find(i => i.id === id);
+            if(item.qtd > 0) {
+                item.qtd -= 1;
+                localStorage.setItem('patio_estoque', JSON.stringify(estoque));
+                renderizar();
+            }
+        }
+
+        function removerEstoque(id) {
+            if(confirm("Deseja realmente excluir este item?")) {
+                estoque = estoque.filter(i => i.id !== id);
+                localStorage.setItem('patio_estoque', JSON.stringify(estoque));
+                renderizar();
+            }
+        }
+
+        function atualizarStatus(id, valor) {
             const v = patio.find(v => v.id === id);
-            v[campo] = valor;
+            v.status = valor;
             localStorage.setItem('patio_data', JSON.stringify(patio));
-            if(campo === 'status') renderizar();
+            renderizar();
         }
 
         function gerarOS(id) {
             const v = patio.find(v => v.id === id);
-            let servs = v.servicos.map(s => `<div style="display:flex; justify-between; font-size:10px"><span>${s.nome}</span> <span>R$ ${parseFloat(s.preco).toFixed(2)}</span></div>`).join('');
-            document.getElementById('conteudo-os').innerHTML = `
-                <center><strong>ORDEM DE SERVIÇO</strong></center>
-                <hr style="border:1px dashed #000; margin:10px 0">
-                <p><strong>CLIENTE:</strong> ${v.cliente} | <strong>CPF:</strong> ${v.cpf}</p>
-                <p><strong>VEÍCULO:</strong> ${v.modelo} (${v.placa})</p>
-                <p><strong>PREVISÃO:</strong> ${v.dataPrevista.split('-').reverse().join('/')}</p>
-                <hr style="border:1px dashed #000; margin:10px 0">
-                ${servs}
-                <hr style="border:1px dashed #000; margin:10px 0">
-                <p align="right"><strong>TOTAL GERAL: R$ ${v.total.toFixed(2)}</strong></p>
-                <br><br><p align="center">_________________________<br>Assinatura</p>
-            `;
+            let sHTML = v.servicos.map(s => `<div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:3px"><span>${s.nome}</span> <span>R$ ${parseFloat(s.preco).toFixed(2)}</span></div>`).join('');
+            document.getElementById('conteudo-os').innerHTML = `<center><strong style="font-size:16px">ORDEM DE SERVIÇO</strong></center><hr style="border:1px dashed #000; margin:10px 0"><p><strong>PLACA:</strong> ${v.placa}</p><p><strong>VEÍCULO:</strong> ${v.modelo} | <strong>COR:</strong> ${v.cor}</p><p><strong>CLIENTE:</strong> ${v.cliente} | <strong>CPF:</strong> ${v.cpf}</p><p><strong>ENDEREÇO:</strong> ${v.endereco}</p><hr style="border:1px dashed #000; margin:10px 0">${sHTML}<hr style="border:1px dashed #000; margin:10px 0"><p align="right" style="font-size:14px"><strong>TOTAL GERAL: R$ ${v.total.toFixed(2)}</strong></p><br><br><p align="center">___________________________<br>Assinatura Responsável</p>`;
             document.getElementById('modal-os').style.display = 'flex';
         }
 
         function darSaida(id) {
             const v = patio.find(v => v.id === id);
-            historico.unshift({...v, saidaReal: new Date().toLocaleDateString()});
+            historico.unshift(v);
             localStorage.setItem('patio_historico', JSON.stringify(historico));
             patio = patio.filter(v => v.id !== id);
             localStorage.setItem('patio_data', JSON.stringify(patio));
-            renderizar();
-        }
-
-        function mudarAba(aba) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-            document.getElementById('aba-' + aba).classList.add('active');
             renderizar();
         }
 
